@@ -1,265 +1,316 @@
-'use client';
+﻿'use client';
 
-import { motion } from 'motion/react';
-import { ArrowDown, MapPin, Briefcase } from 'lucide-react';
-import { Portrait } from '@/components/ui/portrait';
+import React, { useState, useRef, useEffect } from 'react';
+import { ArrowRight, Play, Sparkles } from 'lucide-react';
+import { gsap } from 'gsap';
+import { useGSAP } from '@gsap/react';
+import { SplitText } from '@/components/react-bits/split-text';
+import { CountUp } from '@/components/react-bits/count-up';
+import { Magnet } from '@/components/react-bits/magnet';
+import { TechIcon } from '@/components/ui/tech-icons';
+import { heroStats } from '@/data/stats';
+import { heroLatestProject } from '@/data/hero-cards';
+import { useSmoothScroll } from '@/components/providers/smooth-scroll';
 
-function DataVisualizationBg() {
-  // Abstract data-points / connected nodes SVG — purely decorative
-  const nodes = [
-    { cx: 80, cy: 60, r: 3 },
-    { cx: 220, cy: 100, r: 2 },
-    { cx: 160, cy: 180, r: 4 },
-    { cx: 320, cy: 80, r: 2.5 },
-    { cx: 380, cy: 200, r: 3 },
-    { cx: 260, cy: 280, r: 2 },
-    { cx: 100, cy: 320, r: 3.5 },
-    { cx: 440, cy: 320, r: 2 },
-    { cx: 50, cy: 220, r: 2 },
-    { cx: 490, cy: 140, r: 2.5 },
-  ];
+// No Scikit-learn pill — floating icons are small, decorative only
+const floatingIcons = [
+  { name: 'Python', x: -35, y: -90, delay: 0 },
+  { name: 'Power BI', x: 130, y: -70, delay: 0.2 },
+  { name: 'SQL', x: -60, y: 30, delay: 0.4 },
+  { name: 'Streamlit', x: 140, y: 70, delay: 0.3 },
+];
 
-  const edges = [
-    [0, 1], [1, 2], [1, 3], [3, 4], [4, 5], [5, 6], [2, 5], [0, 6], [4, 7], [3, 9], [8, 0], [8, 6],
-  ];
+const ROLES = ['Data Analyst', 'ML Engineer', 'BI Developer', 'Data Scientist'];
+
+function RotatingRole() {
+  const [index, setIndex] = useState(0);
+  const [visible, setVisible] = useState(true);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setVisible(false);
+      setTimeout(() => {
+        setIndex((i) => (i + 1) % ROLES.length);
+        setVisible(true);
+      }, 350);
+    }, 2500);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
-    <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
-      <svg
-        className="absolute right-0 top-0 w-full h-full opacity-20 dark:opacity-15"
-        viewBox="0 0 540 400"
-        preserveAspectRatio="xMidYMid slice"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        {/* Edges */}
-        {edges.map(([a, b], i) => (
-          <motion.line
-            key={i}
-            x1={nodes[a].cx}
-            y1={nodes[a].cy}
-            x2={nodes[b].cx}
-            y2={nodes[b].cy}
-            stroke="currentColor"
-            className="text-accent"
-            strokeWidth="0.75"
-            initial={{ pathLength: 0, opacity: 0 }}
-            animate={{ pathLength: 1, opacity: 1 }}
-            transition={{ delay: 1 + i * 0.08, duration: 0.8, ease: 'easeOut' }}
-          />
-        ))}
-        {/* Nodes */}
-        {nodes.map((n, i) => (
-          <motion.circle
-            key={i}
-            cx={n.cx}
-            cy={n.cy}
-            r={n.r}
-            fill="currentColor"
-            className="text-accent"
-            initial={{ scale: 0, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ delay: 0.8 + i * 0.07, duration: 0.4, ease: 'backOut' }}
-          />
-        ))}
-        {/* Pulsing center node */}
-        <motion.circle
-          cx={220}
-          cy={100}
-          r={8}
-          fill="none"
-          stroke="currentColor"
-          className="text-accent"
-          strokeWidth="1"
-          animate={{ scale: [1, 1.8, 1], opacity: [0.5, 0, 0.5] }}
-          transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-        />
-      </svg>
-    </div>
+    <span
+      className="inline-block text-[#FF5A4E] font-mono text-sm font-bold tracking-wide transition-all duration-350"
+      style={{
+        opacity: visible ? 1 : 0,
+        transform: visible ? 'translateY(0)' : 'translateY(-8px)',
+      }}
+    >
+      {ROLES[index]}
+    </span>
   );
 }
-
-// Animated background orbs
-function BackgroundOrbs() {
-  return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
-      <div
-        className="orb-1 absolute w-[500px] h-[500px] rounded-full -top-32 -right-32 blur-[120px]"
-        style={{ background: 'color-mix(in srgb, var(--accent) 12%, transparent)' }}
-      />
-      <div
-        className="orb-2 absolute w-[400px] h-[400px] rounded-full bottom-0 left-0 blur-[100px]"
-        style={{ background: 'color-mix(in srgb, var(--accent-secondary) 10%, transparent)' }}
-      />
-    </div>
-  );
-}
-
-const stagger = {
-  container: {
-    hidden: {},
-    show: {
-      transition: { staggerChildren: 0.12, delayChildren: 0.2 },
-    },
-  },
-  item: {
-    hidden: { opacity: 0, y: 32 },
-    show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] as const } },
-  },
-};
 
 export function Hero() {
+  const { scrollTo } = useSmoothScroll();
+  const sectionRef = useRef<HTMLElement | null>(null);
+  const heroContentRef = useRef<HTMLDivElement | null>(null);
+  const [mouseParallax, setMouseParallax] = useState({ x: 0, y: 0 });
+  const [photoError, setPhotoError] = useState(false);
+  const [photoSrc, setPhotoSrc] = useState('/images/profile-cutout.png');
+
+  const handlePhotoError = () => {
+    if (photoSrc === '/images/profile-cutout.png') {
+      setPhotoSrc('/images/portrait.jpg');
+    } else if (photoSrc === '/images/portrait.jpg') {
+      setPhotoSrc('/images/profile.jpg');
+    } else {
+      setPhotoError(true);
+    }
+  };
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLElement>) => {
+    if (!sectionRef.current) return;
+    const rect = sectionRef.current.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+    const y = ((e.clientY - rect.top) / rect.height) * 2 - 1;
+    setMouseParallax({
+      x: Math.max(-1, Math.min(1, x)),
+      y: Math.max(-1, Math.min(1, y)),
+    });
+  };
+
+  const handleMouseLeave = () => setMouseParallax({ x: 0, y: 0 });
+
+  // GSAP continuous float on the photo column
+  const photoColRef = useRef<HTMLDivElement | null>(null);
+  useGSAP(() => {
+    if (!photoColRef.current) return;
+    gsap.to(photoColRef.current, {
+      y: -8, duration: 3.5, repeat: -1, yoyo: true, ease: 'sine.inOut',
+    });
+  }, { scope: photoColRef });
+
   return (
     <section
+      ref={sectionRef}
       id="hero"
-      className="relative min-h-screen flex items-center section-padding overflow-hidden"
-      style={{ background: 'var(--bg-primary)' }}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      className="relative min-h-[95svh] flex flex-col justify-center section-padding pt-24 sm:pt-28 lg:pt-32 pb-8 sm:pb-12 overflow-hidden bg-[var(--bg-primary)]"
     >
-      <BackgroundOrbs />
-      <DataVisualizationBg />
+      {/* Background Architectural Grid */}
+      <div className="architectural-grid absolute inset-0 pointer-events-none opacity-50 dark:opacity-30" />
 
-      <div className="container-max relative z-10 w-full">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-          {/* Left — Text */}
-          <motion.div
-            variants={stagger.container}
-            initial="hidden"
-            animate="show"
-          >
-            {/* Availability badge */}
-            <motion.div variants={stagger.item} className="mb-6">
-              <span
-                className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-mono border"
-                style={{
-                  borderColor: 'var(--accent)',
-                  color: 'var(--accent)',
-                  background: 'color-mix(in srgb, var(--accent) 8%, transparent)',
-                }}
-              >
-                <span className="w-1.5 h-1.5 rounded-full bg-current animate-pulse" />
-                À la recherche d&apos;un stage PFE
-              </span>
-            </motion.div>
-
-            {/* Name */}
-            <motion.h1
-              variants={stagger.item}
-              className="text-5xl md:text-6xl xl:text-7xl font-display font-bold leading-none tracking-tight mb-4"
-              style={{ color: 'var(--text-primary)' }}
+      <div className="container-max relative z-10 w-full my-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+          {/* LEFT COLUMN */}
+          <div ref={heroContentRef} className="lg:col-span-7 flex flex-col items-start text-left">
+            {/* Pill badge */}
+            <div
+              className="mb-5 sm:mb-6"
+              style={{ animation: 'fadeSlideUp 0.5s ease forwards', animationDelay: '0s' }}
             >
-              ALAE
-              <br />
-              <span className="gradient-text">IKHLAS</span>
-            </motion.h1>
-
-            {/* Title */}
-            <motion.p
-              variants={stagger.item}
-              className="text-base md:text-lg font-mono uppercase tracking-widest mb-6"
-              style={{ color: 'var(--text-secondary)' }}
-            >
-              Data Analyst · Business Intelligence · Machine Learning
-            </motion.p>
-
-            {/* Headline */}
-            <motion.p
-              variants={stagger.item}
-              className="text-2xl md:text-3xl font-display font-semibold leading-tight mb-6"
-              style={{ color: 'var(--text-primary)' }}
-            >
-              Turning Data Into{' '}
-              <span className="gradient-text">Meaningful</span>{' '}
-              Decisions.
-            </motion.p>
-
-            {/* Sub-text */}
-            <motion.p
-              variants={stagger.item}
-              className="text-base leading-relaxed max-w-xl mb-8"
-              style={{ color: 'var(--text-secondary)' }}
-            >
-              Étudiant en Intelligence Artificielle, option Data Analyst, je transforme les données en
-              analyses pertinentes, visualisations interactives et outils d&apos;aide à la décision.
-            </motion.p>
-
-            {/* Location */}
-            <motion.div
-              variants={stagger.item}
-              className="flex items-center gap-1.5 mb-10 text-sm"
-              style={{ color: 'var(--text-secondary)' }}
-            >
-              <MapPin size={14} />
-              Tanger, Maroc
-            </motion.div>
-
-            {/* CTAs */}
-            <motion.div variants={stagger.item} className="flex flex-wrap gap-4">
-              <a
-                id="hero-cta-projects"
-                href="#projects"
-                onClick={(e) => {
-                  e.preventDefault();
-                  document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' });
-                }}
-                className="btn-primary"
-              >
-                <Briefcase size={16} />
-                Explorer mes projets
-              </a>
-              <a
-                id="hero-cta-contact"
-                href="#contact"
-                onClick={(e) => {
-                  e.preventDefault();
-                  document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
-                }}
-                className="btn-secondary"
-              >
-                Me contacter
-              </a>
-            </motion.div>
-          </motion.div>
-
-          {/* Right — Portrait */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95, x: 30 }}
-            animate={{ opacity: 1, scale: 1, x: 0 }}
-            transition={{ duration: 0.9, delay: 0.4, ease: [0.22, 1, 0.36, 1] as const }}
-            className="flex justify-center lg:justify-end"
-          >
-            <div className="relative">
-              {/* Decorative ring behind portrait */}
-              <div
-                className="absolute -inset-4 rounded-3xl"
-                style={{
-                  background:
-                    'conic-gradient(from 180deg at 50% 50%, var(--accent) 0deg, var(--accent-secondary) 120deg, transparent 240deg)',
-                  opacity: 0.15,
-                  filter: 'blur(20px)',
-                }}
-                aria-hidden="true"
-              />
-              <Portrait size={380} className="relative shadow-2xl" />
+              <div className="badge-pill">
+                <span className="w-2 h-2 rounded-full bg-[#FF5A4E] shadow-[0_0_8px_#FF5A4E] animate-pulse" />
+                <RotatingRole />
+                <span className="text-[var(--text)] opacity-50 mx-1">·</span>
+                <span className="text-[var(--text)] text-xs">Business Intelligence</span>
+              </div>
             </div>
-          </motion.div>
+
+            {/* Headline with GSAP SplitText */}
+            <h1 className="font-display font-extrabold text-[clamp(2.5rem,5.6vw,4.75rem)] leading-[1.04] tracking-[-0.035em] text-[var(--text)] mb-5">
+              <SplitText text="Je transforme les données" delay={0.05} />
+              <br />
+              <span className="text-[#FF5A4E] drop-shadow-[0_0_30px_rgba(255,90,78,0.25)] shimmer-coral">
+                <SplitText text="en décisions d'impact." delay={0.35} />
+              </span>
+            </h1>
+
+            {/* One short sentence */}
+            <p
+              className="text-base sm:text-lg leading-relaxed text-[var(--text-muted)] max-w-lg mb-8 font-normal"
+              style={{ animation: 'fadeSlideUp 0.5s ease forwards', animationDelay: '0.45s', opacity: 0 }}
+            >
+              Transformer la donnée brute en visualisations stratégiques et modèles prédictifs exploitables.
+            </p>
+
+            {/* Magnetic CTA Buttons */}
+            <div
+              className="flex flex-wrap items-center gap-4 mb-10"
+              style={{ animation: 'fadeSlideUp 0.5s ease forwards', animationDelay: '0.55s', opacity: 0 }}
+            >
+              <Magnet strength={20}>
+                <button
+                  onClick={() => scrollTo('#projects')}
+                  className="btn-primary group"
+                  aria-label="Explorer mes projets"
+                >
+                  <span>Explorer mes projets</span>
+                  <ArrowRight size={15} className="transition-transform group-hover:translate-x-1" />
+                </button>
+              </Magnet>
+
+              <Magnet strength={15}>
+                <button
+                  onClick={() => scrollTo('#contact')}
+                  className="btn-secondary group"
+                  aria-label="Me contacter"
+                >
+                  <div className="w-6 h-6 rounded-full bg-[#FF5A4E]/15 text-[#FF5A4E] flex items-center justify-center transition-colors group-hover:bg-[#FF5A4E] group-hover:text-[#141B2D]">
+                    <Play size={10} className="fill-current translate-x-0.5" />
+                  </div>
+                  <span>Me contacter</span>
+                </button>
+              </Magnet>
+            </div>
+
+            {/* Stat Counters */}
+            <div
+              className="w-full pt-6 border-t border-[var(--border)]"
+              style={{ animation: 'fadeSlideUp 0.6s ease forwards', animationDelay: '0.65s', opacity: 0 }}
+            >
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-0">
+                <div className="flex flex-col sm:border-r sm:border-[var(--border)] sm:pr-4">
+                  <span className="font-display font-extrabold text-2xl sm:text-3xl text-[var(--text)] tracking-tight">
+                    <CountUp to={10} suffix="+" />
+                  </span>
+                  <span className="text-xs font-bold font-display text-[var(--text)] mt-0.5">Projets Réalisés</span>
+                  <span className="text-[11px] text-[var(--text-muted)]">BI &amp; Machine Learning</span>
+                </div>
+                <div className="flex flex-col sm:border-r sm:border-[var(--border)] sm:px-4">
+                  <span className="font-display font-extrabold text-2xl sm:text-3xl text-[var(--text)] tracking-tight">
+                    <CountUp to={95} suffix="%+" />
+                  </span>
+                  <span className="text-xs font-bold font-display text-[var(--text)] mt-0.5">Précision Modèles</span>
+                  <span className="text-[11px] text-[var(--text-muted)]">Classification &amp; Tests</span>
+                </div>
+                <div className="flex flex-col sm:border-r sm:border-[var(--border)] sm:px-4">
+                  <span className="font-display font-extrabold text-2xl sm:text-3xl text-[var(--text)] tracking-tight">
+                    <CountUp to={15} suffix="+" />
+                  </span>
+                  <span className="text-xs font-bold font-display text-[var(--text)] mt-0.5">Outils Maîtrisés</span>
+                  <span className="text-[11px] text-[var(--text-muted)]">Python, Power BI, SQL</span>
+                </div>
+                <div className="flex flex-col sm:pl-4">
+                  <span className="font-display font-extrabold text-2xl sm:text-3xl text-[var(--text)] tracking-tight">
+                    <CountUp to={100} suffix="%" />
+                  </span>
+                  <span className="text-xs font-bold font-display text-[var(--text)] mt-0.5">Rigueur &amp; Passion</span>
+                  <span className="text-[11px] text-[var(--text-muted)]">Impact Métier</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* RIGHT COLUMN — Photo with continuous float */}
+          <div
+            ref={photoColRef}
+            className="lg:col-span-5 relative flex justify-center items-end min-h-[420px] sm:min-h-[500px] lg:min-h-[580px]"
+          >
+            {/* Large coral glow behind subject */}
+            <div className="hero-subject-glow" />
+
+            {/* Halo rings (decorative only, no labels) */}
+            <div
+              className="absolute w-[360px] h-[360px] sm:w-[440px] sm:h-[440px] rounded-full border border-[#FF5A4E]/20 pointer-events-none transition-transform duration-700 ease-out"
+              style={{ transform: `translate3d(${mouseParallax.x * -12}px, ${mouseParallax.y * -12}px, 0)` }}
+            />
+            <div
+              className="absolute w-[440px] h-[440px] sm:w-[520px] sm:h-[520px] rounded-full border border-[#FF5A4E]/10 pointer-events-none transition-transform duration-700 ease-out"
+              style={{ transform: `translate3d(${mouseParallax.x * -20}px, ${mouseParallax.y * -20}px, 0)` }}
+            />
+
+            {/* Photo */}
+            <div
+              className="relative z-10 w-full flex items-end justify-center h-full"
+              style={{ transform: `translate3d(${mouseParallax.x * 10}px, ${mouseParallax.y * 10}px, 0)`, transition: 'transform 0.6s ease-out' }}
+            >
+              {!photoError ? (
+                <div className="relative w-full flex items-end justify-center">
+                  <img
+                    src={photoSrc}
+                    alt="Alae Ikhlas — Data Analyst"
+                    width={440}
+                    height={620}
+                    onError={handlePhotoError}
+                    className="max-h-[75vh] w-auto object-contain object-bottom select-none drop-shadow-[0_20px_40px_rgba(20,27,45,0.4)] dark:drop-shadow-[0_25px_50px_rgba(0,0,0,0.85)]"
+                    style={{
+                      maskImage: 'linear-gradient(to bottom, black 0%, black 82%, transparent 98%)',
+                      WebkitMaskImage: 'linear-gradient(to bottom, black 0%, black 82%, transparent 98%)',
+                    }}
+                  />
+                </div>
+              ) : (
+                <div className="w-[300px] sm:w-[360px] h-[420px] sm:h-[480px] rounded-t-full rounded-b-3xl border border-[#FF5A4E]/30 bg-gradient-to-b from-[#1B2440] to-[#141B2D] p-6 flex flex-col items-center justify-center relative overflow-hidden shadow-2xl">
+                  <div className="architectural-grid absolute inset-0 opacity-40" />
+                  <div className="w-24 h-24 rounded-full bg-[#FF5A4E]/20 border border-[#FF5A4E] flex items-center justify-center text-[#FF5A4E] text-3xl font-display font-extrabold mb-4 shadow-[0_0_30px_rgba(255,90,78,0.4)]">
+                    AI
+                  </div>
+                  <p className="font-display font-bold text-lg text-[#F4F1EA] text-center">Alae Ikhlas</p>
+                  <p className="text-xs text-[#FF5A4E] font-mono mt-1">Data Analyst &amp; ML</p>
+                </div>
+              )}
+
+              {/* Floating Tool Icons — icon only, no text, no orbit labels */}
+              {floatingIcons.map((icon, idx) => (
+                <div
+                  key={icon.name}
+                  className="absolute pointer-events-none z-20"
+                  style={{
+                    transform: `translate3d(${icon.x + mouseParallax.x * (idx % 2 === 0 ? 18 : -18)}px, ${icon.y + mouseParallax.y * (idx % 2 === 0 ? 18 : -18)}px, 0)`,
+                    animation: `fadeSlideUp 0.5s ease forwards`,
+                    animationDelay: `${0.6 + icon.delay}s`,
+                    opacity: 0,
+                  }}
+                >
+                  <div className="w-9 h-9 rounded-full bg-[var(--surface)]/90 backdrop-blur-md border border-[var(--border)] shadow-lg flex items-center justify-center text-[#FF5A4E]"
+                    title={icon.name}
+                  >
+                    <TechIcon name={icon.name} size={16} />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
 
-        {/* Scroll indicator */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.5, duration: 0.6 }}
-          className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
-          style={{ color: 'var(--text-secondary)' }}
-          aria-hidden="true"
+        {/* HERO FOOTER ROW */}
+        <div
+          className="mt-8 sm:mt-12 pt-6 flex items-center justify-between flex-wrap gap-4"
+          style={{ animation: 'fadeSlideUp 0.6s ease forwards', animationDelay: '0.8s', opacity: 0 }}
         >
-          <motion.div
-            animate={{ y: [0, 6, 0] }}
-            transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
+          <button
+            onClick={() => scrollTo(heroLatestProject.href)}
+            className="inline-flex items-center gap-3 px-4 py-2 rounded-xl bg-[var(--surface)]/80 backdrop-blur-xl border border-[var(--border)] shadow-sm hover:border-[#FF5A4E]/50 hover:shadow-md transition-all group text-left"
+            aria-label={`Découvrir le ${heroLatestProject.badge} : ${heroLatestProject.title}`}
           >
-            <ArrowDown size={18} />
-          </motion.div>
-        </motion.div>
+            <div className="w-7 h-7 rounded-lg bg-[#FF5A4E]/15 text-[#FF5A4E] flex items-center justify-center font-bold text-xs">
+              <Sparkles size={14} />
+            </div>
+            <div className="flex flex-col">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-[#FF5A4E]">{heroLatestProject.badge}</span>
+              <span className="text-xs font-bold text-[var(--text)] group-hover:text-[#FF5A4E] transition-colors flex items-center gap-1">
+                {heroLatestProject.title}
+                <ArrowRight size={11} className="transition-transform group-hover:translate-x-0.5" />
+              </span>
+            </div>
+          </button>
+
+          <button
+            onClick={() => scrollTo('#tools')}
+            className="group flex items-center gap-2.5 text-xs font-bold font-display tracking-wide text-[var(--text-muted)] hover:text-[#FF5A4E] transition-colors ml-auto"
+            aria-label="Défiler vers la suite"
+          >
+            <span>Explorer</span>
+            <div className="w-5 h-8 rounded-full border-2 border-current flex justify-center pt-1.5 transition-colors">
+              <div
+                className="w-1 h-1.5 rounded-full bg-[#FF5A4E]"
+                style={{ animation: 'scrollDot 1.8s ease-in-out infinite' }}
+              />
+            </div>
+          </button>
+        </div>
       </div>
     </section>
   );

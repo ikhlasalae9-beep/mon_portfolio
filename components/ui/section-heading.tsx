@@ -19,22 +19,25 @@ export function SectionHeading({
 }: SectionHeadingProps) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 24 }}
+      initial={{ opacity: 0, y: 16 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-80px' }}
-      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-      className={`mb-12 ${align === 'center' ? 'text-center' : ''} ${className}`}
+      viewport={{ once: true, margin: '-60px' }}
+      transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+      className={`mb-8 sm:mb-12 ${align === 'center' ? 'text-center' : ''} ${className}`}
     >
       {eyebrow && (
-        <p className="text-accent font-mono text-sm uppercase tracking-widest mb-3">
-          {eyebrow}
-        </p>
+        <div className={`inline-flex items-center gap-2 mb-2.5 ${align === 'center' ? 'justify-center' : ''}`}>
+          <span className="w-1.5 h-1.5 rounded-full bg-[#FF5A4E]" />
+          <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#FF5A4E] font-display">
+            {eyebrow}
+          </p>
+        </div>
       )}
-      <h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-bold text-text-primary leading-tight">
+      <h2 className="text-3xl sm:text-4xl lg:text-5xl font-display font-extrabold leading-[1.08] tracking-[-0.03em] text-[var(--text)]">
         {title}
       </h2>
       {subtitle && (
-        <p className="mt-4 text-text-secondary text-lg max-w-2xl leading-relaxed">
+        <p className="mt-2.5 text-sm sm:text-base max-w-xl leading-relaxed text-[var(--text-muted)] font-normal">
           {subtitle}
         </p>
       )}
