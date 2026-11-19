@@ -37,7 +37,7 @@ export function Footer() {
 
   return (
     <footer
-      className="relative border-t border-[var(--border)] bg-[var(--bg-secondary)]"
+      className="relative border-t border-[var(--border)] bg-[var(--bg-secondary)]/85 backdrop-blur-[2px]"
     >
       <div className="container-max px-6 md:px-8 py-10">
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">

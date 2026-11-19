@@ -96,7 +96,7 @@ export function Hero() {
       id="hero"
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className="relative min-h-[95svh] flex flex-col justify-center section-padding pt-24 sm:pt-28 lg:pt-32 pb-8 sm:pb-12 overflow-hidden bg-[var(--bg-primary)]"
+      className="relative min-h-[95svh] flex flex-col justify-center section-padding pt-24 sm:pt-28 lg:pt-32 pb-8 sm:pb-12 overflow-hidden bg-transparent"
     >
       {/* Background Architectural Grid */}
       <div className="architectural-grid absolute inset-0 pointer-events-none opacity-50 dark:opacity-30" />
@@ -104,7 +104,7 @@ export function Hero() {
       <div className="container-max relative z-10 w-full my-auto">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           {/* LEFT COLUMN */}
-          <div ref={heroContentRef} className="lg:col-span-7 flex flex-col items-start text-left">
+          <div ref={heroContentRef} className="lg:col-span-7 flex flex-col items-start text-left section-scrim p-4 sm:p-6 rounded-3xl">
             {/* Pill badge */}
             <div
               className="mb-5 sm:mb-6"

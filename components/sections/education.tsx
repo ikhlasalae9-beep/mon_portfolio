@@ -49,7 +49,7 @@ export function Education() {
   return (
     <section
       id="education"
-      className="section-padding bg-[var(--bg-secondary)] relative overflow-hidden"
+      className="section-padding bg-[var(--bg-secondary)]/75 backdrop-blur-[2px] relative overflow-hidden"
     >
       <div className="container-max" ref={containerRef}>
         {/* Section Header: max 1 short line under 12 words */}

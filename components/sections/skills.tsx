@@ -341,7 +341,7 @@ export function Skills() {
     <section
       ref={sectionRef}
       id="skills"
-      className="section-padding relative overflow-hidden bg-[var(--bg-primary)]"
+      className="section-padding relative overflow-hidden bg-[var(--bg-primary)]/70 backdrop-blur-[2px]"
     >
       {/* Background Bokeh & Sparkles */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden select-none" aria-hidden="true">

@@ -23,7 +23,7 @@ export function About() {
   return (
     <section
       id="about"
-      className="section-padding bg-[var(--bg-secondary)] relative overflow-hidden"
+      className="section-padding bg-[var(--bg-secondary)]/75 backdrop-blur-[2px] relative overflow-hidden"
     >
       <div className="container-max">
         {/* Section Header: max 1 short line under 12 words */}

@@ -601,7 +601,7 @@ export function Projects() {
   return (
     <section
       id="projects"
-      className="section-padding bg-[var(--bg-primary)] relative"
+      className="section-padding bg-[var(--bg-primary)]/75 backdrop-blur-[2px] relative"
     >
       <div className="container-max">
         {/* Section Header */}

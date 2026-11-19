@@ -48,7 +48,7 @@ export function Contact() {
   return (
     <section
       id="contact"
-      className="section-padding bg-[var(--bg-primary)] relative overflow-hidden"
+      className="section-padding bg-[var(--bg-primary)]/75 backdrop-blur-[2px] relative overflow-hidden"
     >
       {/* Background Scrolling Marquee Banner "PARLONS DATA · MACHINE LEARNING · BI" */}
       <div className="absolute top-12 left-0 right-0 pointer-events-none opacity-5 select-none overflow-hidden">
