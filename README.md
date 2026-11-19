@@ -9,10 +9,11 @@
 
 Portfolio personnel développé sur-mesure pour **Alae Ikhlas**, combinant une identité visuelle moderne (*Midnight × Ivory × Electric Blue*), une expérience interactive axée sur la Data & la Business Intelligence, et des performances optimales.
 
-### Palette de Couleurs
-- **Mode Sombre** : Fond `#101322` · Surface `#1D2338` · Texte `#F5F6FA` · Accent `#5B8CFF` · Secondaire `#A78BFA`
-- **Mode Clair** : Fond `#F6F4EF` · Surface `#FFFFFF` · Texte `#171A2B` · Accent `#315EEA` · Secondaire `#7754D8`
+### Palette de Couleurs (Inspirée de MaisonDeLUX)
+- **Mode Sombre** : Fond `#08111F` · Surface `#101C31` · Texte `#FFFFFF` / `#94A3B8` · Accent `#3B82F6` · Secondaire `#2563EB`
+- **Mode Clair** : Fond `#F5F3ED` (Ivoire/Sable) · Surface `#FFFFFF` · Texte `#101B2D` (Bleu Marine) · Accent `#1D4ED8` (Bleu Royal)
 - **Typographie** : Space Grotesk (Titres & Chiffres) + Inter (Corps de texte)
+- **Esthétique** : Grille architecturale fine, ombres portées subtiles, boutons pilules élégants, suppression des gradients excessifs
 
 ---
 
@@ -124,6 +125,7 @@ import Image from 'next/image';
 2. **GlutiSafe** — Application d'Assistance Alimentaire IA
    - *Python, OCR, AI Chatbot, Supabase*
    - Extraction de texte des étiquettes d'ingrédients pour intolérance au gluten.
+   - Lien : [https://gluti-safe-v2.vercel.app/](https://gluti-safe-v2.vercel.app/)
 3. **SoftQuiz** — Plateforme d'Évaluation des Compétences
    - *Full-Stack, Web, UI/UX*
    - Évaluation des soft skills avec calcul dynamique des scores.
